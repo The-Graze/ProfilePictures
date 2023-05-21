@@ -27,7 +27,7 @@ namespace ProfilePictures
         void Awake()
         {
             Instance = this;
-            PFPLink = Config.Bind("Settings","Profile Picture URL","","Paste the Link here for people to see ur url");
+            PFPLink = Config.Bind("Settings","Profile Picture URL", "https://static.wikia.nocookie.net/gorillatag/images/7/77/Gorillapin.png/revision/latest?cb=20220223225937", "Paste the Link here for people to see ur url");
         }
         void Start()
         { Utilla.Events.GameInitialized += OnGameInitialized; }
