@@ -4,6 +4,7 @@ using ExitGames.Client.Photon.StructWrapping;
 using Oculus.Platform;
 using OVR.OpenVR;
 using Photon.Pun;
+using Photon.Voice.PUN;
 using PlayFab;
 using PlayFab.ClientModels;
 using System;
@@ -45,18 +46,19 @@ namespace ProfilePictures
         string URL;
         Sprite pfp;
         bool hasimage;
-        void Awake()
+        void Start()
         {
             hasimage = false;
             s = GetComponent<GorillaPlayerScoreboardLine>();
-            if (s.playerVRRig.photonView.Owner.CustomProperties.ContainsKey("PFP"))
-            {
-                URL = s.playerVRRig.photonView.Owner.CustomProperties["PFP"].ToString();
-                if(URL != null) StartCoroutine(GetTexture(URL));
-            }
         }
         void Update()
         {
+            if (URL == "" || URL == null && s.playerVRRig.photonView.Owner.CustomProperties.ContainsKey("PFP") && hasimage == false)
+            {
+                URL = s.playerVRRig.photonView.Owner.CustomProperties["PFP"].ToString();
+                if (URL != null) StartCoroutine(GetTexture(URL));
+            }
+
             if (hasimage == true)
             {
                 s.playerSwatch.color = Color.white;
