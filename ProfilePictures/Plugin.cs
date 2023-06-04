@@ -1,21 +1,13 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
-using ExitGames.Client.Photon.StructWrapping;
-using Oculus.Platform;
-using OVR.OpenVR;
 using Photon.Pun;
-using Photon.Voice.PUN;
-using PlayFab;
-using PlayFab.ClientModels;
+using Photon.Realtime;
 using System;
 using System.Collections;
-using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-using Utilla;
-using static Mono.Security.X509.X520;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ProfilePictures
 {
@@ -24,14 +16,20 @@ namespace ProfilePictures
     public class Plugin : BaseUnityPlugin
     {
         public static volatile Plugin Instance;
-        public ConfigEntry<string> PFPLink;
+        public Dictionary<Player, Sprite> PlayerSprites = new Dictionary<Player, Sprite>();
+        public ConfigEntry<String> PFPLink;
+        public List<GorillaPlayerScoreboardLine> PlayerLines = new List<GorillaPlayerScoreboardLine>();
+        public Sprite lPFP;
         void Awake()
         {
             Instance = this;
             PFPLink = Config.Bind("Settings","Profile Picture URL", "https://static.wikia.nocookie.net/gorillatag/images/7/77/Gorillapin.png/revision/latest?cb=20220223225937", "Paste the Link here for people to see ur url");
         }
         void Start()
-        { Utilla.Events.GameInitialized += OnGameInitialized; }
+        {
+            Utilla.Events.GameInitialized += OnGameInitialized;
+            HarmonyPatches.ApplyHarmonyPatches();
+        }
         void OnGameInitialized(object sender, EventArgs e)
         {
             HarmonyPatches.ApplyHarmonyPatches();
@@ -39,33 +37,7 @@ namespace ProfilePictures
             table.Add("PFP", PFPLink.Value);
             PhotonNetwork.LocalPlayer.SetCustomProperties(table);
         }
-    }
-    public class PFPAdder : MonoBehaviour
-    {
-        GorillaPlayerScoreboardLine s;
-        string URL;
-        Sprite pfp;
-        bool hasimage;
-        void Start()
-        {
-            hasimage = false;
-            s = GetComponent<GorillaPlayerScoreboardLine>();
-        }
-        void Update()
-        {
-            if (URL == "" || URL == null && s.playerVRRig.photonView.Owner.CustomProperties.ContainsKey("PFP") && hasimage == false)
-            {
-                URL = s.playerVRRig.photonView.Owner.CustomProperties["PFP"].ToString();
-                if (URL != null) StartCoroutine(GetTexture(URL));
-            }
-
-            if (hasimage == true)
-            {
-                s.playerSwatch.color = Color.white;
-                s.playerSwatch.overrideSprite = pfp;
-            }
-        }
-        IEnumerator GetTexture(string URL)
+        public IEnumerator GetTexture(Player player, string URL, bool islocal)
         {
             UnityWebRequest www = UnityWebRequestTexture.GetTexture(URL);
             yield return www.SendWebRequest();
@@ -76,11 +48,72 @@ namespace ProfilePictures
             else
             {
                 Texture image = ((DownloadHandlerTexture)www.downloadHandler).texture;
-                pfp = Sprite.Create((Texture2D)image, new Rect(0.0f, 0.0f, image.width, image.height), new Vector2(0.5f, 0.5f), 100.0f);
-                s.infectedTexture = (Texture2D)image;
-                hasimage = true;
+                Sprite pfp = Sprite.Create((Texture2D)image, new Rect(0.0f, 0.0f, image.width, image.height), new Vector2(0.5f, 0.5f), 100.0f);
+
+                if (!PlayerSprites.ContainsKey(player) || !PlayerSprites.ContainsValue(pfp) && islocal == false)
+                {
+                    PlayerSprites.Add(player, pfp);
+                }
+                if (player == PhotonNetwork.LocalPlayer && lPFP == null)
+                {
+                    lPFP = pfp;
+                }
+                foreach (GorillaPlayerScoreboardLine sb in PlayerLines)
+                {
+                    if (sb.linePlayer == player)
+                    {
+                        sb.GetComponent<PFPAdder>().pfp = pfp;
+                        sb.GetComponent<PFPAdder>().hasPFP = true;
+                    }
+                }
                 www.Dispose();
             }
         }
+
+        void Update()
+        {
+           foreach (Player p in PlayerSprites.Keys)
+           {
+                if(p == null) PlayerSprites.Remove(p);
+           }
+           if(!PhotonNetwork.InRoom) PlayerSprites.Clear(); PlayerLines.Clear();
+        }
     }
+    public class PFPAdder : MonoBehaviour
+    {
+        Plugin p = Plugin.Instance;
+        GorillaPlayerScoreboardLine scoreboardLine;
+        public Sprite pfp;
+        public bool hasPFP;
+        void Start()
+        {
+            scoreboardLine = this.GetComponent<GorillaPlayerScoreboardLine>();
+            p.PlayerLines.Add(scoreboardLine);
+        }
+
+        void Update()
+        {
+            if (scoreboardLine.linePlayer.IsLocal)
+            {
+                pfp = p.lPFP;
+                hasPFP = true;
+            }
+            if (hasPFP && pfp != null)
+            {
+                scoreboardLine.playerSwatch.overrideSprite = pfp;
+                scoreboardLine.playerSwatch.color = Color.white;
+            }
+        }
+
+        void OnDisable()
+        {
+            p.PlayerLines.Remove(scoreboardLine);
+        }
+        void OnDestroy()
+        {
+            p.PlayerLines.Remove(scoreboardLine);
+        }
+    }
+
+
 }
