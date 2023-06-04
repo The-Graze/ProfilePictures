@@ -76,7 +76,24 @@ namespace ProfilePictures
            {
                 if(p == null) PlayerSprites.Remove(p);
            }
-           if(!PhotonNetwork.InRoom) PlayerSprites.Clear(); PlayerLines.Clear();
+
+           if (!PhotonNetwork.InRoom)
+            {
+                PlayerSprites.Clear(); PlayerLines.Clear();
+            }
+
+
+            foreach (GorillaPlayerScoreboardLine line in PlayerLines)
+            {
+                foreach (Player p in PlayerSprites.Keys)
+                {
+                    if (p == line.linePlayer)
+                    {
+                        line.GetComponent<PFPAdder>().pfp = PlayerSprites[line.linePlayer];
+                        line.GetComponent<PFPAdder>().hasPFP= true;
+                    }
+                }
+            }
         }
     }
     public class PFPAdder : MonoBehaviour
