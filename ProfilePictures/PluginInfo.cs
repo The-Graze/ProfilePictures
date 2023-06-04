@@ -7,6 +7,6 @@
     {
         public const string GUID = "ProfilePictrures.ByGraze";
         public const string Name = "Profile Pictures";
-        public const string Version = "1.0.0";
+        public const string Version = "2.0.0";
     }
 }
