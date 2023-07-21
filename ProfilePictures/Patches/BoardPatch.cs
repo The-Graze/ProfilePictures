@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using Photon.Pun;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,7 +15,15 @@ namespace ProfilePictures.Patches
     {
         private static void Postfix(GorillaPlayerScoreboardLine __instance)
         {
-            __instance.gameObject.AddComponent<PFPAdder>();
+            if(__instance.linePlayer.CustomProperties.ContainsKey("PFP")) 
+            {
+                Plugin.Instance.PlayerLines.Add(__instance);
+                __instance.gameObject.AddComponent<PFPAdder>().scoreboardLine = __instance;
+                if (__instance.linePlayer != PhotonNetwork.LocalPlayer && !Plugin.Instance.PlayerSprites.ContainsKey(__instance.linePlayer))
+                {
+                    Plugin.Instance.StartCoroutine("GetTexture", new object[] { __instance.linePlayer, __instance.linePlayer.CustomProperties["PFP"], false });
+                }
+            }
         }
     }
 }
