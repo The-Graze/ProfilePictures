@@ -19,10 +19,6 @@ namespace ProfilePictures.Patches
             {
                 Plugin.Instance.PlayerLines.Add(__instance);
                 __instance.gameObject.AddComponent<PFPAdder>().scoreboardLine = __instance;
-                if (__instance.linePlayer != PhotonNetwork.LocalPlayer && !Plugin.Instance.PlayerSprites.ContainsKey(__instance.linePlayer))
-                {
-                    Plugin.Instance.StartCoroutine("GetTexture", new object[] { __instance.linePlayer, __instance.linePlayer.CustomProperties["PFP"], false });
-                }
             }
         }
     }

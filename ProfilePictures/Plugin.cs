@@ -33,45 +33,48 @@ namespace ProfilePictures
             var table = PhotonNetwork.LocalPlayer.CustomProperties;
             table.Add("PFP", PFPLink.Value);
             PhotonNetwork.LocalPlayer.SetCustomProperties(table);
-            StartCoroutine(GetTexture(PhotonNetwork.LocalPlayer, PFPLink.Value, true));
         }
-        public IEnumerator GetTexture(Player player, string URL, bool islocal)
+        public IEnumerator GetTexture(Player player)
         {
-            if (!PlayerSprites.ContainsKey(player))
+            string URL = player.CustomProperties["PFP"].ToString();
+            UnityWebRequest www = UnityWebRequestTexture.GetTexture(URL);
+            yield return www.SendWebRequest();
+            if (www.error != null)
             {
-                UnityWebRequest www = UnityWebRequestTexture.GetTexture(URL);
-                yield return www.SendWebRequest();
-                if (www.error != null)
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Texture image = ((DownloadHandlerTexture)www.downloadHandler).texture;
+                Sprite pfp = Sprite.Create((Texture2D)image, new Rect(0.0f, 0.0f, image.width, image.height), new Vector2(0.5f, 0.5f), 100.0f);
+                if (player == PhotonNetwork.LocalPlayer)
                 {
-                    Debug.Log(www.error);
-                }
-                else if(!islocal)
-                {
-                    Texture image = ((DownloadHandlerTexture)www.downloadHandler).texture;
-                    Sprite pfp = Sprite.Create((Texture2D)image, new Rect(0.0f, 0.0f, image.width, image.height), new Vector2(0.5f, 0.5f), 100.0f);
-                    PlayerSprites.Add(player, pfp);
-                }
-                if (player == PhotonNetwork.LocalPlayer || islocal && lPFP == null )
-                {
-                    Texture image = ((DownloadHandlerTexture)www.downloadHandler).texture;
-                    Sprite pfp = Sprite.Create((Texture2D)image, new Rect(0.0f, 0.0f, image.width, image.height), new Vector2(0.5f, 0.5f), 100.0f);
                     lPFP = pfp;
                 }
-                www.Dispose();
+                else 
+                {
+                    PlayerSprites.Add(player, pfp);
+                }
+
             }
+                www.Dispose();
         }
 
         void Update()
         {
-           foreach (Player p in PlayerSprites.Keys)
-           {
-                if(p == null) PlayerSprites.Remove(p);
-           }
+            foreach (Player p in PlayerSprites.Keys)
+            {
+                if (p == null) PlayerSprites.Remove(p);
+            }
 
-           if (!PhotonNetwork.InRoom)
-           {
+            if (!PhotonNetwork.InRoom)
+            {
                 PlayerSprites.Clear(); PlayerLines.Clear();
-           }
+            }
+            if (PhotonNetwork.IsConnectedAndReady && lPFP == null)
+            {
+                StartCoroutine(GetTexture(PhotonNetwork.LocalPlayer));
+            }
         }
     }
     public class PFPAdder : MonoBehaviour
@@ -80,6 +83,17 @@ namespace ProfilePictures
         public GorillaPlayerScoreboardLine scoreboardLine;
         public Sprite pfp;
         public bool hasPFP;
+
+        void Start()
+        {
+            if (scoreboardLine.linePlayer != PhotonNetwork.LocalPlayer)
+            {
+                if (!p.PlayerSprites.ContainsKey(scoreboardLine.linePlayer))
+                {
+                    p.StartCoroutine(p.GetTexture(scoreboardLine.linePlayer));
+                }
+            }
+        }
 
         void Update()
         {
