@@ -18,7 +18,6 @@ namespace ProfilePictures
         public static volatile Plugin Instance;
         public Dictionary<Player, Sprite> PlayerSprites = new Dictionary<Player, Sprite>();
         public ConfigEntry<String> PFPLink;
-        public List<GorillaPlayerScoreboardLine> PlayerLines = new List<GorillaPlayerScoreboardLine>();
         public Sprite lPFP;
         void Start()
         {
@@ -29,52 +28,30 @@ namespace ProfilePictures
         }
         void OnGameInitialized(object sender, EventArgs e)
         {
-            HarmonyPatches.ApplyHarmonyPatches();
             var table = PhotonNetwork.LocalPlayer.CustomProperties;
             table.Add("PFP", PFPLink.Value);
             PhotonNetwork.LocalPlayer.SetCustomProperties(table);
+            StartCoroutine(LocalGet());
         }
         public IEnumerator GetTexture(Player player)
         {
             string URL = player.CustomProperties["PFP"].ToString();
             UnityWebRequest www = UnityWebRequestTexture.GetTexture(URL);
             yield return www.SendWebRequest();
-            if (www.error != null)
+            Texture image = ((DownloadHandlerTexture)www.downloadHandler).texture;
+            Sprite pfp = Sprite.Create((Texture2D)image, new Rect(0.0f, 0.0f, image.width, image.height), new Vector2(0.5f, 0.5f), 100.0f);
+            if (!PlayerSprites.ContainsKey(player))
             {
-                Debug.Log(www.error);
+                PlayerSprites.Add(player, pfp);
             }
-            else
-            {
-                Texture image = ((DownloadHandlerTexture)www.downloadHandler).texture;
-                Sprite pfp = Sprite.Create((Texture2D)image, new Rect(0.0f, 0.0f, image.width, image.height), new Vector2(0.5f, 0.5f), 100.0f);
-                if (player == PhotonNetwork.LocalPlayer)
-                {
-                    lPFP = pfp;
-                }
-                else 
-                {
-                    PlayerSprites.Add(player, pfp);
-                }
-
-            }
-                www.Dispose();
         }
-
-        void Update()
+        IEnumerator LocalGet()
         {
-            foreach (Player p in PlayerSprites.Keys)
-            {
-                if (p == null) PlayerSprites.Remove(p);
-            }
-
-            if (!PhotonNetwork.InRoom)
-            {
-                PlayerSprites.Clear(); PlayerLines.Clear();
-            }
-            if (PhotonNetwork.IsConnectedAndReady && lPFP == null)
-            {
-                StartCoroutine(GetTexture(PhotonNetwork.LocalPlayer));
-            }
+            string URL = PFPLink.Value;
+            UnityWebRequest www = UnityWebRequestTexture.GetTexture(URL);
+            yield return www.SendWebRequest();
+            Texture image = ((DownloadHandlerTexture)www.downloadHandler).texture;
+            lPFP = Sprite.Create((Texture2D)image, new Rect(0.0f, 0.0f, image.width, image.height), new Vector2(0.5f, 0.5f), 100.0f);
         }
     }
     public class PFPAdder : MonoBehaviour
@@ -83,18 +60,6 @@ namespace ProfilePictures
         public GorillaPlayerScoreboardLine scoreboardLine;
         public Sprite pfp;
         public bool hasPFP;
-
-        void Start()
-        {
-            if (scoreboardLine.linePlayer != PhotonNetwork.LocalPlayer)
-            {
-                if (!p.PlayerSprites.ContainsKey(scoreboardLine.linePlayer))
-                {
-                    p.StartCoroutine(p.GetTexture(scoreboardLine.linePlayer));
-                }
-            }
-        }
-
         void Update()
         {
             if (scoreboardLine.linePlayer.IsLocal)
@@ -107,21 +72,17 @@ namespace ProfilePictures
                 pfp = p.PlayerSprites[scoreboardLine.linePlayer];
                 hasPFP = true;
             }
-
+            else if(hasPFP == false)
+            {
+               StartCoroutine(Plugin.Instance.GetTexture(scoreboardLine.linePlayer));
+                return;
+            }
             if (hasPFP && pfp != null)
             {
                 scoreboardLine.playerSwatch.overrideSprite = pfp;
+                scoreboardLine.playerSwatch.sprite = pfp;
                 scoreboardLine.playerSwatch.color = Color.white;
             }
-        }
-
-        void OnDisable()
-        {
-            p.PlayerLines.Remove(scoreboardLine);
-        }
-        void OnDestroy()
-        {
-            p.PlayerLines.Remove(scoreboardLine);
         }
     }
 }
