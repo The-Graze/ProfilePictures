@@ -48,6 +48,7 @@ namespace ProfilePictures.Patches
                     }
                     __instance.playerSwatch.color = Color.white;
                     __instance.playerSwatch.sprite = PFP;
+                    __instance.playerSwatch.material = __instance.playerVRRig.scoreboardMaterial;
                 }
                 else
                 {
