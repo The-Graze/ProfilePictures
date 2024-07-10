@@ -14,6 +14,7 @@ namespace ProfilePictures
     public class Plugin : BaseUnityPlugin
     {
         public static ConfigEntry<String> PFPLink;
+        public static Dictionary<Player, Sprite> AllreadySaved = new Dictionary<Player, Sprite>();
         Plugin()
         {
             Harmony harmony = Harmony.CreateAndPatchAll(typeof(Plugin).Assembly, PluginInfo.GUID);
@@ -26,7 +27,6 @@ namespace ProfilePictures
         }
         public class Net : MonoBehaviourPunCallbacks
         {
-            public static Dictionary<Player, Sprite> AllreadySaved = new Dictionary<Player, Sprite>();
             public override void OnConnectedToMaster()
             {
                 var table = PhotonNetwork.LocalPlayer.CustomProperties;

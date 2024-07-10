@@ -3,16 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\reece\\source\\repos\\ProfilePictures\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6722A525-235A-4EF3-8565-48FB30D665FF}|ProfilePictures\\ProfilePictures.csproj|c:\\users\\reece\\source\\repos\\profilepictures\\profilepictures\\boardlinehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6722A525-235A-4EF3-8565-48FB30D665FF}|ProfilePictures\\ProfilePictures.csproj|solutionrelative:profilepictures\\boardlinehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{6722A525-235A-4EF3-8565-48FB30D665FF}|ProfilePictures\\ProfilePictures.csproj|c:\\users\\reece\\source\\repos\\profilepictures\\profilepictures\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6722A525-235A-4EF3-8565-48FB30D665FF}|ProfilePictures\\ProfilePictures.csproj|solutionrelative:profilepictures\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6722A525-235A-4EF3-8565-48FB30D665FF}|ProfilePictures\\ProfilePictures.csproj|c:\\users\\reece\\source\\repos\\profilepictures\\profilepictures\\patches\\boardpatch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6722A525-235A-4EF3-8565-48FB30D665FF}|ProfilePictures\\ProfilePictures.csproj|solutionrelative:profilepictures\\patches\\boardpatch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6722A525-235A-4EF3-8565-48FB30D665FF}|ProfilePictures\\ProfilePictures.csproj|c:\\users\\reece\\source\\repos\\profilepictures\\profilepictures\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6722A525-235A-4EF3-8565-48FB30D665FF}|ProfilePictures\\ProfilePictures.csproj|solutionrelative:profilepictures\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,24 +18,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "BoardLineHandler.cs",
-              "DocumentMoniker": "C:\\Users\\reece\\source\\repos\\ProfilePictures\\ProfilePictures\\BoardLineHandler.cs",
-              "RelativeDocumentMoniker": "ProfilePictures\\BoardLineHandler.cs",
-              "ToolTip": "C:\\Users\\reece\\source\\repos\\ProfilePictures\\ProfilePictures\\BoardLineHandler.cs",
-              "RelativeToolTip": "ProfilePictures\\BoardLineHandler.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAYAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-08T15:26:26.81Z",
-              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -49,21 +32,23 @@
               "RelativeDocumentMoniker": "ProfilePictures\\Patches\\BoardPatch.cs",
               "ToolTip": "C:\\Users\\reece\\source\\repos\\ProfilePictures\\ProfilePictures\\Patches\\BoardPatch.cs",
               "RelativeToolTip": "ProfilePictures\\Patches\\BoardPatch.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAABAAAA",
+              "ViewState": "AQIAAB8AAAAAAAAAAAAgwDcAAAAVAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-08T14:35:54.662Z"
+              "WhenOpened": "2024-07-10T01:06:30.247Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Plugin.cs",
               "DocumentMoniker": "C:\\Users\\reece\\source\\repos\\ProfilePictures\\ProfilePictures\\Plugin.cs",
               "RelativeDocumentMoniker": "ProfilePictures\\Plugin.cs",
               "ToolTip": "C:\\Users\\reece\\source\\repos\\ProfilePictures\\ProfilePictures\\Plugin.cs",
               "RelativeToolTip": "ProfilePictures\\Plugin.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAACAAAAA4AAAA",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAAA8AAAAyAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-08T14:30:14.042Z"
+              "WhenOpened": "2024-07-08T14:30:14.042Z",
+              "EditorCaption": ""
             }
           ]
         }
