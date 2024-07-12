@@ -7,12 +7,12 @@
       "RelativeMoniker": "D:0:0:{6722A525-235A-4EF3-8565-48FB30D665FF}|ProfilePictures\\ProfilePictures.csproj|solutionrelative:profilepictures\\patches\\boardpatch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6722A525-235A-4EF3-8565-48FB30D665FF}|ProfilePictures\\ProfilePictures.csproj|c:\\users\\reece\\source\\repos\\profilepictures\\profilepictures\\plugininfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6722A525-235A-4EF3-8565-48FB30D665FF}|ProfilePictures\\ProfilePictures.csproj|solutionrelative:profilepictures\\plugininfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{6722A525-235A-4EF3-8565-48FB30D665FF}|ProfilePictures\\ProfilePictures.csproj|c:\\users\\reece\\source\\repos\\profilepictures\\profilepictures\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6722A525-235A-4EF3-8565-48FB30D665FF}|ProfilePictures\\ProfilePictures.csproj|solutionrelative:profilepictures\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6722A525-235A-4EF3-8565-48FB30D665FF}|ProfilePictures\\ProfilePictures.csproj|c:\\users\\reece\\source\\repos\\profilepictures\\profilepictures\\plugininfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6722A525-235A-4EF3-8565-48FB30D665FF}|ProfilePictures\\ProfilePictures.csproj|solutionrelative:profilepictures\\plugininfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,7 +30,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "PluginInfo.cs",
               "DocumentMoniker": "C:\\Users\\reece\\source\\repos\\ProfilePictures\\ProfilePictures\\PluginInfo.cs",
               "RelativeDocumentMoniker": "ProfilePictures\\PluginInfo.cs",
@@ -38,8 +38,7 @@
               "RelativeToolTip": "ProfilePictures\\PluginInfo.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAEAAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-10T02:45:04.032Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-10T02:45:04.032Z"
             },
             {
               "$type": "Document",
@@ -49,20 +48,20 @@
               "RelativeDocumentMoniker": "ProfilePictures\\Patches\\BoardPatch.cs",
               "ToolTip": "C:\\Users\\reece\\source\\repos\\ProfilePictures\\ProfilePictures\\Patches\\BoardPatch.cs",
               "RelativeToolTip": "ProfilePictures\\Patches\\BoardPatch.cs",
-              "ViewState": "AQIAABwAAAAAAAAAAAAgwDIAAABhAAAA",
+              "ViewState": "AQIAAA0AAAAAAAAAAAA5wBgAAAAVAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-10T01:06:30.247Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Plugin.cs",
               "DocumentMoniker": "C:\\Users\\reece\\source\\repos\\ProfilePictures\\ProfilePictures\\Plugin.cs",
               "RelativeDocumentMoniker": "ProfilePictures\\Plugin.cs",
               "ToolTip": "C:\\Users\\reece\\source\\repos\\ProfilePictures\\ProfilePictures\\Plugin.cs",
               "RelativeToolTip": "ProfilePictures\\Plugin.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAA8AAAAyAAAA",
+              "ViewState": "AQIAAAUAAAAAAAAAAAAIwCwAAABKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-08T14:30:14.042Z"
             }
