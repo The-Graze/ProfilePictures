@@ -1,14 +1,8 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using GorillaNetworking;
-using HarmonyLib;
 using Photon.Pun;
-using Photon.Realtime;
-using ProfilePictures.Patches;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -17,56 +11,47 @@ namespace ProfilePictures
     [BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]
     public class Plugin : BaseUnityPlugin
     {
-        public static ConfigEntry<String> PFPLink;
-        public static Dictionary<Player, Sprite> AllreadySaved = new Dictionary<Player, Sprite>();
-        public static List<Player> SavedPlayerList;
+        public static ConfigEntry<string> PFPLink;
         public static Sprite LocalSprite;
-        Plugin()
+
+        private void Awake()
         {
-            Harmony harmony = Harmony.CreateAndPatchAll(typeof(Plugin).Assembly, PluginInfo.GUID);
+            HarmonyPatches.ApplyHarmonyPatches();
         }
 
-        void Update()
+        private void Start()
         {
-            SavedPlayerList = AllreadySaved.Keys.ToList();
+            // Bind the configuration entry
+            PFPLink = Config.Bind("Settings", "Profile Picture URL",
+                "https://static.wikia.nocookie.net/gorillatag/images/7/77/Gorillapin.png/revision/latest?cb=20220223225937",
+                "Paste the Link here for people to see your URL");
+
+            GorillaTagger.OnPlayerSpawned(() => StartCoroutine(DownloadAndSetTexture()));
         }
 
-        void Start()
+        private IEnumerator DownloadAndSetTexture()
         {
-            this.AddComponent<Net>();
-            PFPLink = Config.Bind("Settings", "Profile Picture URL", "https://static.wikia.nocookie.net/gorillatag/images/7/77/Gorillapin.png/revision/latest?cb=20220223225937", "Paste the Link here for people to see ur url");
-            StartCoroutine(GetTexture(PFPLink.Value));
-        }
-        public class Net : MonoBehaviourPunCallbacks
-        {
-            public override void OnLeftRoom()
+            using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(PFPLink.Value))
             {
-                AllreadySaved.Clear();
-                AllreadySaved.Add(PhotonNetwork.LocalPlayer, LocalSprite);
-            }
-            public override void OnPreLeavingRoom()
-            {
-                AllreadySaved.Clear();
-                AllreadySaved.Add(PhotonNetwork.LocalPlayer, LocalSprite);
-            }
-            public override void OnPlayerLeftRoom(Player otherPlayer)
-            {
-                AllreadySaved.Remove(otherPlayer);
-                AllreadySaved.Add(PhotonNetwork.LocalPlayer, LocalSprite);
-            }
-        }
-        public static IEnumerator GetTexture(string URL)
-        {
-            var table = PhotonNetwork.LocalPlayer.CustomProperties;
-            table.AddOrUpdate("PFP", PFPLink.Value);
-            PhotonNetwork.LocalPlayer.SetCustomProperties(table);
-            UnityWebRequest www = UnityWebRequestTexture.GetTexture(URL);
-            yield return www.SendWebRequest();
-            Texture image = ((DownloadHandlerTexture)www.downloadHandler).texture;
-            Sprite PFP = Sprite.Create((Texture2D)image, new Rect(0.0f, 0.0f, image.width, image.height), new Vector2(0.5f, 0.5f), 100.0f);
-            PFP.name = "_Local_" + PhotonNetwork.LocalPlayer.NickName;
-            LocalSprite = PFP;
+                yield return www.SendWebRequest();
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    yield break;
+                }
 
+                Texture2D texture = ((DownloadHandlerTexture)www.downloadHandler).texture;
+                if (texture == null)
+                {
+                    yield break;
+                }
+
+                LocalSprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+                LocalSprite.name = "Local_" + PhotonNetwork.LocalPlayer.NickName;
+
+                var properties = PhotonNetwork.LocalPlayer.CustomProperties;
+                properties.AddOrUpdate("PFP",PFPLink.Value);
+                PhotonNetwork.LocalPlayer.SetCustomProperties(properties);
+            }
         }
     }
 }
