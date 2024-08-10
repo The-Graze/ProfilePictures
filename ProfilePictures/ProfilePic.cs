@@ -24,38 +24,45 @@ namespace ProfilePictures
 
         void Update()
         {
-            if (scoreboardLine == null) return;
+            if (PhotonNetwork.InRoom)
+            {
+                if (scoreboardLine == null) return;
 
-            if (scoreboardLine.linePlayer.IsLocal)
-            {
-                if (playerSprite == null)
+                if (scoreboardLine.linePlayer.IsLocal)
                 {
-                    currentUrl = Plugin.PFPLink.Value;
-                    playerSprite = Plugin.LocalSprite;
-                    UpdateScoreboardLine();
-                }
-            }
-            else
-            {
-                if (scoreboardLine.playerVRRig.creator.CustomProperties.TryGetValue("PFP", out object pfpUrl))
-                {
-                    string url = (string)pfpUrl;
-                    if (currentUrl != url)
+                    if (playerSprite == null)
                     {
-                        currentUrl = url;
-                        playerSprite = null;
-                        StartCoroutine(GetTexture(url));
+                        currentUrl = Plugin.PFPLink.Value;
+                        playerSprite = Plugin.LocalSprite;
+                        UpdateScoreboardLine();
                     }
                 }
                 else
                 {
-                    Reset();
-                }
+                    if (scoreboardLine.playerVRRig.creator.CustomProperties.TryGetValue("PFP", out object pfpUrl))
+                    {
+                        string url = (string)pfpUrl;
+                        if (currentUrl != url)
+                        {
+                            currentUrl = url;
+                            playerSprite = null;
+                            StartCoroutine(GetTexture(url));
+                        }
+                    }
+                    else
+                    {
+                        Reset(true);
+                    }
 
-                if (playerSprite != null)
-                {
-                    UpdateScoreboardLine();
+                    if (playerSprite != null)
+                    {
+                        UpdateScoreboardLine();
+                    }
                 }
+            }
+            else
+            {
+                Reset(false);
             }
         }
 
@@ -67,20 +74,25 @@ namespace ProfilePictures
             scoreboardLine.playerSwatch.color = Color.white;
         }
 
-        private void Reset()
+        private void Reset(bool destory)
         {
             scoreboardLine.playerSwatch.sprite = null;
             scoreboardLine.playerSwatch.overrideSprite = null;
-            scoreboardLine.playerSwatch.material = scoreboardLine.playerVRRig.scoreboardMaterial;
-            scoreboardLine.playerSwatch.color = scoreboardLine.playerVRRig.playerColor;
+            scoreboardLine.playerSwatch.material = null;
+            scoreboardLine.playerSwatch.color = Color.black;
             playerSprite = null;
             currentUrl = "";
-            StartCoroutine(WaitAndDestroy());
+            if (destory)
+            {
+                StartCoroutine(WaitAndDestroy());
+            }
         }
 
         private IEnumerator WaitAndDestroy()
         {
+            scoreboardLine.UpdateLine();
             yield return new WaitForSeconds(2);
+            scoreboardLine.UpdateLine();
             Destroy(this);
         }
 
