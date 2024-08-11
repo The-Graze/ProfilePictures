@@ -17,23 +17,34 @@ namespace ProfilePictures.Patches
             {
                 if (__instance.playerVRRig.creator.CustomProperties.ContainsKey("PFP"))
                 {
-                    if (__instance.GetComponent<ProfilePic>() == null)
+                    try
                     {
-                        __instance.gameObject.AddComponent<ProfilePic>();
-                    }
-                    if (__instance.playerNameVisible != __instance.playerVRRig.playerNameVisible)
-                    {
-                        __instance.UpdatePlayerText();
-                    }
-                    if (__instance.myRecorder == null)
-                    {
-                        __instance.myRecorder = NetworkSystem.Instance.LocalRecorder;
-                    }
-                    if (__instance.playerVRRig != null)
-                    {
-                        if (__instance.playerVRRig.remoteUseReplacementVoice || __instance.playerVRRig.localUseReplacementVoice || GorillaComputer.instance.voiceChatOn == "FALSE")
+                        if (__instance.GetComponent<ProfilePic>() == null)
                         {
-                            if (__instance.playerVRRig.SpeakingLoudness > __instance.playerVRRig.replacementVoiceLoudnessThreshold && !__instance.rigContainer.ForceMute && !__instance.rigContainer.Muted)
+                            __instance.gameObject.AddComponent<ProfilePic>();
+                        }
+                        if (__instance.playerNameVisible != __instance.playerVRRig.playerNameVisible)
+                        {
+                            __instance.UpdatePlayerText();
+                        }
+                        if (__instance.myRecorder == null)
+                        {
+                            __instance.myRecorder = NetworkSystem.Instance.LocalRecorder;
+                        }
+                        if (__instance.playerVRRig != null)
+                        {
+                            if (__instance.playerVRRig.remoteUseReplacementVoice || __instance.playerVRRig.localUseReplacementVoice || GorillaComputer.instance.voiceChatOn == "FALSE")
+                            {
+                                if (__instance.playerVRRig.SpeakingLoudness > __instance.playerVRRig.replacementVoiceLoudnessThreshold && !__instance.rigContainer.ForceMute && !__instance.rigContainer.Muted)
+                                {
+                                    __instance.speakerIcon.enabled = true;
+                                }
+                                else
+                                {
+                                    __instance.speakerIcon.enabled = false;
+                                }
+                            }
+                            else if ((__instance.rigContainer.Voice != null && __instance.rigContainer.Voice.IsSpeaking) || (__instance.playerVRRig.rigSerializer.IsLocallyOwned && __instance.myRecorder != null && __instance.myRecorder.IsCurrentlyTransmitting))
                             {
                                 __instance.speakerIcon.enabled = true;
                             }
@@ -42,34 +53,37 @@ namespace ProfilePictures.Patches
                                 __instance.speakerIcon.enabled = false;
                             }
                         }
-                        else if ((__instance.rigContainer.Voice != null && __instance.rigContainer.Voice.IsSpeaking) || (__instance.playerVRRig.rigSerializer.IsLocallyOwned && __instance.myRecorder != null && __instance.myRecorder.IsCurrentlyTransmitting))
-                        {
-                            __instance.speakerIcon.enabled = true;
-                        }
                         else
                         {
                             __instance.speakerIcon.enabled = false;
                         }
-                    }
-                    else
-                    {
-                        __instance.speakerIcon.enabled = false;
-                    }
 
-                    if (!__instance.isMuteManual)
-                    {
-                        bool isPlayerAutoMuted = __instance.rigContainer.GetIsPlayerAutoMuted();
-                        if (__instance.muteButton.isAutoOn != isPlayerAutoMuted)
+                        if (!__instance.isMuteManual)
                         {
-                            __instance.muteButton.isAutoOn = isPlayerAutoMuted;
-                            __instance.muteButton.UpdateColor();
+                            bool isPlayerAutoMuted = __instance.rigContainer.GetIsPlayerAutoMuted();
+                            if (__instance.muteButton.isAutoOn != isPlayerAutoMuted)
+                            {
+                                __instance.muteButton.isAutoOn = isPlayerAutoMuted;
+                                __instance.muteButton.UpdateColor();
+                            }
                         }
+                        return false;
                     }
-
-                    return false;
+                    catch
+                    {
+                        return true;
+                    }
                 }
                 else
                 {
+                    try
+                    {
+                        __instance.playerSwatch.material = __instance.playerVRRig.scoreboardMaterial;
+                        __instance.playerSwatch.sprite = null;
+                        __instance.playerSwatch.overrideSprite = null;
+                        __instance.playerSwatch.color = __instance.playerVRRig.playerColor;
+                    }
+                    catch{}
                     return true;
                 }
             }

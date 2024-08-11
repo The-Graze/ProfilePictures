@@ -44,6 +44,7 @@ namespace ProfilePictures
                         string url = (string)pfpUrl;
                         if (currentUrl != url)
                         {
+                            Reset(false);
                             currentUrl = url;
                             playerSprite = null;
                             StartCoroutine(GetTexture(url));
@@ -62,7 +63,7 @@ namespace ProfilePictures
             }
             else
             {
-                Reset(false);
+                Reset(true);
             }
         }
 

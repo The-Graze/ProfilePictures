@@ -24,7 +24,7 @@ namespace ProfilePictures
             // Bind the configuration entry
             PFPLink = Config.Bind("Settings", "Profile Picture URL",
                 "https://static.wikia.nocookie.net/gorillatag/images/7/77/Gorillapin.png/revision/latest?cb=20220223225937",
-                "Paste the Link here for people to see your URL");
+                "Paste the *WEB!* Link here for people to see your PFP");
 
             GorillaTagger.OnPlayerSpawned(() => StartCoroutine(DownloadAndSetTexture()));
         }
@@ -49,7 +49,7 @@ namespace ProfilePictures
                 LocalSprite.name = "Local_" + PhotonNetwork.LocalPlayer.NickName;
 
                 var properties = PhotonNetwork.LocalPlayer.CustomProperties;
-                properties.AddOrUpdate("PFP",PFPLink.Value);
+                properties.AddOrUpdate("PFP", PFPLink.Value);
                 PhotonNetwork.LocalPlayer.SetCustomProperties(properties);
             }
         }
