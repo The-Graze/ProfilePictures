@@ -39,7 +39,7 @@ namespace ProfilePictures
                 }
                 else
                 {
-                    if (scoreboardLine.playerVRRig.creator.CustomProperties.TryGetValue("PFP", out object pfpUrl))
+                    if (scoreboardLine.playerVRRig.creator.GetPlayerRef().CustomProperties.TryGetValue("PFP", out object pfpUrl))
                     {
                         string url = (string)pfpUrl;
                         if (currentUrl != url)

@@ -15,7 +15,7 @@ namespace ProfilePictures.Patches
         {
             if (PhotonNetwork.InRoom)
             {
-                if (__instance.playerVRRig.creator.CustomProperties.ContainsKey("PFP"))
+                if (__instance.playerVRRig.creator.GetPlayerRef().CustomProperties.ContainsKey("PFP"))
                 {
                     try
                     {
