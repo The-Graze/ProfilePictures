@@ -7,7 +7,11 @@ Adds Networked Profile Pictures on all scorebaords to the Game!
 run the game once first then You edit the config to set your PFP (or can change in game with [BepinexConfigManager](https://github.com/BepInEx/BepInEx.ConfigurationManager)
 
 ![image](https://github.com/The-Graze/ProfilePictures/assets/82724623/387237c5-ae2e-41ce-91af-9d8e8005e353)
- 
+
+
+It needs to be an image LINK, you can upload the image to an image host site and copy it as long as it dosn't have a site in the link
+
+(some image hosts will count it as "raw", Github and imgur are two options, dicord can work but links may not be perminant)
 
 default will be :
 
