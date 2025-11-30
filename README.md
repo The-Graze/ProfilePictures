@@ -16,4 +16,5 @@ run the game once first then You NEED to edit the config file to set your PFP
 ![image](https://static.wikia.nocookie.net/gorillatag/images/7/77/Gorillapin.png/revision/latest?cb=20220223225937)
 
 default will be :
-<img width="472" height="330" src="https://github.com/user-attachments/assets/d04b9767-293a-4df7-9b58-e6ad3b61af1a" />
+![image](https://github.com/user-attachments/assets/494108ee-055d-498f-a722-d225de3a5970)
+
