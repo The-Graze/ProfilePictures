@@ -52,6 +52,12 @@ namespace ProfilePictures
                 if (!_initialized) return;
             }
 
+            if (_line!.reportedCheating || _line!.reportedHateSpeech || _line!.reportedHateSpeech)
+            {
+                enabled = false;
+                return;
+            }
+
             var props = _line?.linePlayer.GetPlayerRef().CustomProperties;
 
             if (!props!.TryGetValue(Constants.PropName, out var val))

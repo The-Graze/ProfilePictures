@@ -15,23 +15,23 @@ namespace ProfilePictures;
 [BepInPlugin(PluginInfo.Guid, PluginInfo.Name, PluginInfo.Version)]
 public class Plugin : BaseUnityPlugin
 {
-    private ConfigEntry<string>? _imageURL;
+    private readonly ConfigEntry<string>? _imageURL;
     private static ConfigEntry<string>? _imageSource;
     private float _timer;
-    private Discord.Discord? _cord;
+    private readonly Discord.Discord? _cord;
     private enum Source
     {
         Discord,
         Steam,
         URL
     }
-    private void Start()
+    private Plugin()
     {
         try
         {
             new Harmony(PluginInfo.Guid).PatchAll(Assembly.GetExecutingAssembly());
                 
-            _cord = new Discord.Discord(1133006310640734300, (UInt64)CreateFlags.NoRequireDiscord);
+            _cord = new Discord.Discord(1133006310640734300, (ulong)CreateFlags.NoRequireDiscord);
             var description = new ConfigDescription(
                 "Where should your PFP be sourced from",
                 new AcceptableValueList<string>(nameof(Source.Discord), nameof(Source.Steam), nameof(Source.URL))
