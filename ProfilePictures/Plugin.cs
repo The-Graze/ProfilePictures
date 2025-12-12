@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
@@ -6,19 +7,21 @@ using BepInEx;
 using BepInEx.Configuration;
 using GorillaNetworking;
 using HarmonyLib;
+using ProfilePictures.DiscordSDK;
 using UnityEngine.Networking;
-using Discord;
 using UnityEngine;
 
 namespace ProfilePictures;
-
 [BepInPlugin(PluginInfo.Guid, PluginInfo.Name, PluginInfo.Version)]
 public class Plugin : BaseUnityPlugin
 {
     private readonly ConfigEntry<string>? _imageURL;
     private static ConfigEntry<string>? _imageSource;
     private float _timer;
-    private readonly Discord.Discord? _cord;
+    private Discord? _cord;
+    // ReSharper disable once FieldCanBeMadeReadOnly.Local
+    private int? _cordAttempts = 0;
+    private bool _cordGiveUp, _firstRun;
     private enum Source
     {
         Discord,
@@ -30,8 +33,6 @@ public class Plugin : BaseUnityPlugin
         try
         {
             new Harmony(PluginInfo.Guid).PatchAll(Assembly.GetExecutingAssembly());
-                
-            _cord = new Discord.Discord(1133006310640734300, (ulong)CreateFlags.NoRequireDiscord);
             var description = new ConfigDescription(
                 "Where should your PFP be sourced from",
                 new AcceptableValueList<string>(nameof(Source.Discord), nameof(Source.Steam), nameof(Source.URL))
@@ -45,7 +46,7 @@ public class Plugin : BaseUnityPlugin
             _imageURL.SettingChanged += (_, _) => SetProps();
             Config.SaveOnConfigSet = true;
         
-            CosmeticsV2Spawner_Dirty.OnPostInstantiateAllPrefabs2 += FirstTime;
+            CosmeticsV2Spawner_Dirty.OnPostInstantiateAllPrefabs += FirstTime;
         }
         catch (Exception e)
         {
@@ -56,14 +57,21 @@ public class Plugin : BaseUnityPlugin
 
     private void Update()
     {
+        if(_cordGiveUp || !_firstRun)
+            return;
+        
         _timer += Time.deltaTime;
-        if (!(_timer >= 0.1f)) return; // every 100 ms
+        if (!(_timer >= 0.1f)) return; //100 ms
         _timer = 0f;
-        _cord?.RunCallbacks();
+        
+        if (_cord == null) InitCord();
+        
+        else _cord?.RunCallbacks();
     }
 
     private void FirstTime()
     {
+        _firstRun = true;
         SetProps();
         CosmeticsV2Spawner_Dirty.OnPostInstantiateAllPrefabs2 -= FirstTime;
     }
@@ -87,7 +95,7 @@ public class Plugin : BaseUnityPlugin
                     tbl.AddOrUpdate(Constants.PropName, _imageURL?.Value);
                     break;
             }
-
+            Logger.LogInfo($"Setting PFP Prop to: {_imageSource?.Value}");
             NetworkSystem.Instance.LocalPlayer.GetPlayerRef().SetCustomProperties(tbl);
         }
         catch (Exception e)
@@ -96,6 +104,33 @@ public class Plugin : BaseUnityPlugin
         }
     }
     
+    private void InitCord()
+    {
+        try
+        {
+            _cord = new Discord(1133006310640734300, (ulong)CreateFlags.NoRequireDiscord);
+        }
+        catch (Exception e)
+        {
+            if (_cordAttempts >= 5)
+            {
+                _cordGiveUp = true;
+                File.WriteAllText("error.txt",$"{e.Message + e.StackTrace}");
+                Logger.LogError($"Discord SDK Failed, Setting Source to Steam If discord is selected");
+                // ReSharper disable once InvertIf
+                if (_imageSource?.Value == nameof(Source.Discord))
+                {
+                    _imageSource.SetSerializedValue(nameof(Source.Steam));
+                    SetProps();
+                }
+
+                return;
+            }
+
+            _cordAttempts++;
+            Logger.LogError($"Discord RPC/SDK Failed to Init for:\n'{e.Message}'\n trying again [{_cordAttempts}/{5}]");
+        }
+    }
     
     public string DiscordPfp()
     {
