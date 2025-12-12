@@ -4,7 +4,12 @@ Adds Networked Profile Pictures on all scorebaords to the Game!
 ![image](https://github.com/The-Graze/ProfilePictures/assets/82724623/7bd5ae88-d49a-4877-bf03-0c4351fc47e7)
 
 
-run the game once first then You edit the config to set your PFP (or can change in game with [BepinexConfigManager](https://github.com/BepInEx/BepInEx.ConfigurationManager)
+Will automaticaly get your Discord or Steam PFP (png, and discord by deafult) as well as Being able to set a URL !
+
+(On linux ((or if you dont have discord)) discord dosn't work and will auto swap to steam, I may in the future add an oculus one but I don't know the oculus API yet)
+
+
+To set a custom image run the game once first then You edit the config to set your PFP (or can change in game with [BepinexConfigManager](https://github.com/BepInEx/BepInEx.ConfigurationManager)
 
 ![image](https://github.com/The-Graze/ProfilePictures/assets/82724623/387237c5-ae2e-41ce-91af-9d8e8005e353)
 
